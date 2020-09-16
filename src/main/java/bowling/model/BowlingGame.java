@@ -18,9 +18,7 @@ public class BowlingGame {
     }
 
     public void bowling(int countOfPins) {
-        System.out.println(playFrameNo + " 번 프레임 : " + countOfPins);
-        playFrameNo = frames.processFrame(playFrameNo, countOfPins);
-        System.out.println();
+        playFrameNo = frames.processFrame(playFrameNo - 1, countOfPins);
     }
 
     public void bowlingFinalFrame(int countOfPins) {

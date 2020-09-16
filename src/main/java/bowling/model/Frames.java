@@ -15,7 +15,7 @@ public class Frames {
 
     public int processFrame(int frameNo, int pins) {
         if (isSecondDeliveryOf(frameNo)) {
-            NormalFrame targetFrame = normalFrameList.get(frameNo - 1);
+            NormalFrame targetFrame = normalFrameList.get(frameNo);
             targetFrame.secondDelivery(pins);
 
             return frameNo + 1;

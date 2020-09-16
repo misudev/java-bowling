@@ -9,9 +9,7 @@ public class NormalFrame {
 
     private NormalFrame(NormalDeliveryEntry normalDeliveryEntry) {
         this.normalDeliveryEntry = normalDeliveryEntry;
-        if (normalDeliveryEntry.isStrike()) {
-            state = State.STRIKE;
-        }
+        setStateAfterDelivery();
     }
 
     public static NormalFrame of(int firstPins) {
@@ -21,6 +19,15 @@ public class NormalFrame {
 
     public void secondDelivery(int secondPins) {
         normalDeliveryEntry.playSecondDelivery(secondPins);
+        setStateAfterDelivery();
+    }
+
+    private void setStateAfterDelivery() {
+        if (normalDeliveryEntry.isStrike()) {
+            state = State.SPARE;
+            return;
+        }
+
         if (normalDeliveryEntry.isSpare()) {
             state = State.SPARE;
             return;
