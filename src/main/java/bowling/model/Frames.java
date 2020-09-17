@@ -14,7 +14,7 @@ public class Frames {
     }
 
     public int processFrame(int frameNo, int pins) {
-        if (isSecondDeliveryOf(frameNo)) {
+        if (isTimeToSecond(frameNo)) {
             NormalFrame targetFrame = normalFrameList.get(frameNo);
             targetFrame.secondDelivery(pins);
 
@@ -27,7 +27,7 @@ public class Frames {
 
     }
 
-    private boolean isSecondDeliveryOf(int frameNo) {
+    private boolean isTimeToSecond(int frameNo) {
         return normalFrameList.size() == frameNo;
     }
 

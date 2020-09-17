@@ -29,7 +29,6 @@ public class Pins {
         return this.countOfPins == MIN_PINS;
     }
 
-
     private void validatePins(int pins) {
         if (pins < MIN_PINS) {
             throw new IllegalArgumentException("최소 핀의 갯수는 0개 입니다.");

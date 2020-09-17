@@ -32,4 +32,5 @@ public class Delivery {
     public int getFallenPins() {
         return fallenPins;
     }
+
 }
