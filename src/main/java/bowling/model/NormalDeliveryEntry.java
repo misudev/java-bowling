@@ -1,17 +1,16 @@
 package bowling.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.LinkedList;
+import java.util.stream.Stream;
 
 public class NormalDeliveryEntry {
+    private final static int TOTAL_COUNT = 2;
 
-    private Delivery firstDelivery;
-    private Delivery secondDelivery;
+    private LinkedList<Delivery> deliveries;
 
     private NormalDeliveryEntry(Delivery firstDelivery) {
-        this.firstDelivery = firstDelivery;
+        deliveries = new LinkedList<>();
+        deliveries.add(firstDelivery);
     }
 
     public static NormalDeliveryEntry of(int firstFallenPins) {
@@ -19,34 +18,29 @@ public class NormalDeliveryEntry {
         return new NormalDeliveryEntry(firstDelivery);
     }
 
-    public void playSecondDelivery(int secondFallenPins) {
+    public void playDelivery(int secondFallenPins) {
         verifyCanSecondDelivery();
-        this.secondDelivery = firstDelivery.next(secondFallenPins);
+        Delivery before = deliveries.getLast();
+        deliveries.add(before.next(secondFallenPins));
     }
 
     private void verifyCanSecondDelivery() {
-        if (isStrike()) {
-            throw new IllegalStateException("스트라이크인 경우 두번째 투구를 할 수 없습니다.");
+        if (isEnd()) {
+            throw new IllegalStateException("더이상 투구를 할 수 없습니다.");
         }
     }
 
-    public boolean isStrike() {
-        return State.STRIKE == firstDelivery.getState();
+    public Stream<Delivery> getDeliveries() {
+        return deliveries.stream();
     }
 
-    public boolean isSpare() {
-        return State.SPARE == secondDelivery.getState();
+    public boolean isEnd() {
+        return getState() == State.STRIKE || deliveries.size() == TOTAL_COUNT;
     }
 
-    public List<Delivery> getDeliveries() {
-        List<Delivery> deliveries = new ArrayList<>();
-        deliveries.add(firstDelivery);
-
-        if (isStrike() || Objects.isNull(secondDelivery)) {
-            return Collections.unmodifiableList(deliveries);
-        }
-
-        deliveries.add(secondDelivery);
-        return Collections.unmodifiableList(deliveries);
+    public State getState() {
+        Delivery lastDelivery = deliveries.getLast();
+        return lastDelivery.getState();
     }
+
 }

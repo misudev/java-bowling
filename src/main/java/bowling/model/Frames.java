@@ -1,42 +1,53 @@
 package bowling.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.stream.Stream;
 
 public class Frames {
+    public static final int TOTAL_FRAME_COUNT = 10;
 
-    private List<NormalFrame> normalFrameList;
-    private FinalFrame finalFrame;
+    private LinkedList<Frame> frames;
 
     public Frames() {
-        normalFrameList = new ArrayList<>();
+         frames = new LinkedList<>();
     }
 
-    public int processFrame(int frameNo, int pins) {
-        if (isTimeToSecond(frameNo)) {
-            NormalFrame targetFrame = normalFrameList.get(frameNo);
-            targetFrame.secondDelivery(pins);
+    public int playBowling(int frameNo, int pins) {
+        if (remainDelivery(frameNo)) {
+            Frame now = frames.pollLast();
+            frames.add(now.roll(pins));
 
-            return frameNo + 1;
+            return frames.getLast().isEnd() ? frameNo + 1 : frameNo;
         }
 
-        NormalFrame newFrame = playFirstDelivery(pins);
-        normalFrameList.add(newFrame);
-        return newFrame.isStrike() ? frameNo + 1: frameNo;
+        Frame newFrame = isFinalFrame(frameNo) ? firstRollWithFinalFrame(pins) : firstRollWithNormalFrame(pins);
+        frames.add(newFrame);
+        return newFrame.isEnd() ? frameNo + 1 : frameNo;
 
     }
 
-    private boolean isTimeToSecond(int frameNo) {
-        return normalFrameList.size() == frameNo;
+    private boolean remainDelivery(int frameNo) {
+        return frames.size() == frameNo;
     }
 
-    private NormalFrame playFirstDelivery(int pins) {
-        return NormalFrame.of(pins);
+    private Frame firstRollWithFinalFrame(int pins) {
+        return FinalFrame.firstRoll(pins);
     }
 
-    public List<NormalFrame> getNormalFrameList() {
-        return Collections.unmodifiableList(normalFrameList);
+    private Frame firstRollWithNormalFrame(int pins) {
+        return NormalFrame.firstRoll(pins);
+    }
+
+    private boolean isFinalFrame(int frameNo) {
+        return frameNo == TOTAL_FRAME_COUNT;
+    }
+
+    public boolean isEnd() {
+        return frames.size() == TOTAL_FRAME_COUNT && frames.getLast().isEnd();
+    }
+
+    public Stream<Frame> getFrames() {
+        return frames.stream();
     }
 
 }

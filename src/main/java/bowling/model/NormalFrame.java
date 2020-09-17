@@ -1,46 +1,49 @@
 package bowling.model;
 
 import java.util.List;
+import java.util.stream.Stream;
 
-public class NormalFrame {
+public class NormalFrame implements Frame {
 
     private NormalDeliveryEntry normalDeliveryEntry;
     private State state;
+
+    public NormalFrame() {
+    }
 
     private NormalFrame(NormalDeliveryEntry normalDeliveryEntry) {
         this.normalDeliveryEntry = normalDeliveryEntry;
         setStateAfterDelivery();
     }
 
-    public static NormalFrame of(int firstPins) {
-        NormalDeliveryEntry normalDeliveryEntry = NormalDeliveryEntry.of(firstPins);
+//    @Override
+    public static Frame firstRoll(int fallenPins) {
+        NormalDeliveryEntry normalDeliveryEntry = NormalDeliveryEntry.of(fallenPins);
         return new NormalFrame(normalDeliveryEntry);
     }
 
-    public void secondDelivery(int secondPins) {
-        normalDeliveryEntry.playSecondDelivery(secondPins);
-        setStateAfterDelivery();
+    @Override
+    public Frame roll(int fallenPins) {
+        normalDeliveryEntry.playDelivery(fallenPins);
+        return new NormalFrame(normalDeliveryEntry);
     }
 
+    @Override
+    public boolean isEnd() {
+        return normalDeliveryEntry.isEnd();
+    }
+
+
     private void setStateAfterDelivery() {
-        if (normalDeliveryEntry.isStrike()) {
-            state = State.SPARE;
-            return;
-        }
-
-        if (normalDeliveryEntry.isSpare()) {
-            state = State.SPARE;
-            return;
-        }
-
-        state = State.MISS;
+        state = normalDeliveryEntry.getState();
     }
 
     public boolean isStrike() {
         return state == State.STRIKE;
     }
 
-    public List<Delivery> getDeliveries() {
+    @Override
+    public Stream<Delivery> getDeliveries() {
         return normalDeliveryEntry.getDeliveries();
     }
 

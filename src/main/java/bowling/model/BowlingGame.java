@@ -1,9 +1,8 @@
 package bowling.model;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public class BowlingGame {
-    public static final int TOTAL_GAME_COUNT = 10;
 
     private Frames frames;
     private int playFrameNo;
@@ -13,24 +12,19 @@ public class BowlingGame {
         this.playFrameNo = 1;
     }
 
-    public boolean isFinalFrame() {
-        return playFrameNo == TOTAL_GAME_COUNT;
-    }
-
     public void bowling(int countOfPins) {
-        playFrameNo = frames.processFrame(playFrameNo - 1, countOfPins);
+        playFrameNo = frames.playBowling(playFrameNo, countOfPins);
     }
 
-    public void bowlingFinalFrame(int countOfPins) {
-
+    public boolean isEnd() {
+        return frames.isEnd();
     }
 
     public int getPlayFrameNo() {
         return playFrameNo;
     }
 
-
-    public List<NormalFrame> getFrameList() {
-        return frames.getNormalFrameList();
+    public Stream<Frame> getFrames() {
+        return frames.getFrames();
     }
 }

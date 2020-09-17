@@ -2,23 +2,20 @@ package bowling.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class FinalDeliveryEntry {
     private final static int DEFAULT_COUNT = 2;
+
     private List<Delivery> deliveries;
     private boolean canBonusDelivery;
 
-    public FinalDeliveryEntry() {
+    public FinalDeliveryEntry(int firstFallenPins) {
         deliveries = new ArrayList<>();
-        canBonusDelivery = false;
+        deliveries.add(playFirstDelivery(firstFallenPins));
     }
 
     public void playDelivery(int fallenPins) {
-        if (deliveries.isEmpty()) {
-            deliveries.add(playFirstDelivery(fallenPins));
-            return;
-        }
-
         Delivery delivery = delivery(fallenPins);
         if (!canBonusDelivery) {
             verifyCanBonusDelivery(delivery);
@@ -63,6 +60,10 @@ public class FinalDeliveryEntry {
 
     private boolean isEndBonusDelivery() {
         return deliveries.size() == DEFAULT_COUNT + 1;
+    }
+
+    public Stream<Delivery> getDeliveries() {
+        return deliveries.stream();
     }
 
 }

@@ -1,14 +1,37 @@
 package bowling.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class FinalFrame {
+import java.util.stream.Stream;
 
-    private List<Delivery> finalDeliveries;
+public class FinalFrame implements Frame {
 
-    public FinalFrame() {
-        finalDeliveries = new ArrayList<>();
+    private FinalDeliveryEntry finalDeliveryEntry;
+
+    private FinalFrame(FinalDeliveryEntry finalfinalDeliveryEntry) {
+        this.finalDeliveryEntry = finalfinalDeliveryEntry;
+    }
+
+   // @Override
+    public static Frame firstRoll(int fallenPins) {
+        FinalDeliveryEntry finalDeliveryEntry = new FinalDeliveryEntry(fallenPins);
+        return new FinalFrame(finalDeliveryEntry);
+
+    }
+
+    @Override
+    public Frame roll(int fallenPins) {
+        finalDeliveryEntry.playDelivery(fallenPins);
+        return new FinalFrame(finalDeliveryEntry);
+    }
+
+    @Override
+    public boolean isEnd() {
+        return finalDeliveryEntry.isEnd();
+    }
+
+    @Override
+    public Stream<Delivery> getDeliveries() {
+        return finalDeliveryEntry.getDeliveries();
     }
 
 }
